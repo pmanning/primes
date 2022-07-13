@@ -8,14 +8,15 @@ import javax.ws.rs.PathParam;
 
 @Path("/primes")
 public class PrimeResource {
-	
+
 	@GET
 	@Path("/sum/{upperLimit}")
 	public Long sumPrimes(@PathParam("upperLimit") Integer upperLimit) {
 		PrimeSieve primeSieve = new PrimeSieve();
 		Set<Integer> primes = primeSieve.getPrimes(upperLimit);
+		//Get all primes up to specified limit and sum them for return value
 		Long sum = 0L;
-		for (int prime: primes) {
+		for (int prime : primes) {
 			sum += prime;
 		}
 		return sum;

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class PrimeSieveTest {
 	PrimeSieve primeSieve = new PrimeSieve();
-	
+
 	@Test
 	public void testKnownPrimes() {
 		Set<Integer> result = primeSieve.getPrimes(100);

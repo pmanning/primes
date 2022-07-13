@@ -11,41 +11,40 @@ public class SimpleRESTServer extends ResourceConfig {
 	private Server server;
 
 	public SimpleRESTServer() throws Exception {
-		
-        register(PrimeResource.class);
 
-        ServletContextHandler contextHandler = new ServletContextHandler();
-        ServletHolder servletHolder = new ServletHolder(new ServletContainer(this));
-        contextHandler.addServlet(servletHolder, "/*");
+		register(PrimeResource.class);
 
-        Thread serverThread = new Thread(new Runnable() {
-			
+		ServletContextHandler contextHandler = new ServletContextHandler();
+		ServletHolder servletHolder = new ServletHolder(new ServletContainer(this));
+		contextHandler.addServlet(servletHolder, "/*");
+
+		Thread serverThread = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
-		        server = new Server(8080);
-		        server.setHandler(contextHandler);
-		        try {
+				server = new Server(8080);
+				server.setHandler(contextHandler);
+				try {
 					server.start();
-			        server.join();
+					server.join();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-        
-        serverThread.start();
-        
+
+		serverThread.start();
+
 	}
 
 	public void shutDown() throws Exception {
 		server.stop();
-		
+
 	}
 
-    public static void main(String[] args) throws Exception {
-        
-    	new SimpleRESTServer();
-    }
+	public static void main(String[] args) throws Exception {
 
+		new SimpleRESTServer();
+	}
 
 }

@@ -16,13 +16,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SimpleRESTServerTest {
-	
+
 	private static SimpleRESTServer server;
 
 	@BeforeClass
 	public static void startServer() throws Exception {
 		server = new SimpleRESTServer();
-		Thread.sleep(5000); //Quick hack to make sure server is fully started
+		Thread.sleep(5000); // Quick hack to make sure server is fully started
 	}
 
 	@AfterClass
@@ -33,7 +33,8 @@ public class SimpleRESTServerTest {
 	@Test
 	public void testRESTCall() throws URISyntaxException, IOException, InterruptedException {
 		HttpClient httpClient = HttpClient.newHttpClient();
-		HttpRequest sumRequest = HttpRequest.newBuilder().uri(new URI("http://127.0.0.1:8080/primes/sum/10000000")).GET().build();
+		HttpRequest sumRequest = HttpRequest.newBuilder().uri(new URI("http://127.0.0.1:8080/primes/sum/10000000"))
+				.GET().build();
 		HttpResponse<String> sumResponse = httpClient.send(sumRequest, BodyHandlers.ofString());
 		long result = 0L;
 		try {
