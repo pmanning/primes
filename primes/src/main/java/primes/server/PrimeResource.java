@@ -2,15 +2,19 @@ package primes.server;
 
 import java.util.Set;
 
-import primes.api.PrimeService;
-import primes.utilities.PrimeSieve;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-public class PrimeResource implements PrimeService {
+@Path("/primes")
+public class PrimeResource {
 
-	public Long sumPrimes(Integer upperLimit) {
+	@GET
+	@Path("/sum/{upperLimit}")
+	public Long sumPrimes(@PathParam("upperLimit") Integer upperLimit) {
 		PrimeSieve primeSieve = new PrimeSieve();
 		Set<Integer> primes = primeSieve.getPrimes(upperLimit);
-		// Get all primes up to specified limit and sum them for return value
+		//Get all primes up to specified limit and sum them for return value
 		Long sum = 0L;
 		for (int prime : primes) {
 			sum += prime;
