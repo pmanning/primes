@@ -1,4 +1,4 @@
-package primes.server;
+package primes.utilities;
 
 import static org.junit.Assert.*;
 
