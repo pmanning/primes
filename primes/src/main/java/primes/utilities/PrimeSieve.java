@@ -1,4 +1,4 @@
-package primes.server;
+package primes.utilities;
 
 import java.util.HashSet;
 import java.util.Set;
