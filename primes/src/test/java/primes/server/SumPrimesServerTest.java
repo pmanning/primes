@@ -4,11 +4,15 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import java.net.ConnectException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
+
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,24 +36,37 @@ public class SumPrimesServerTest {
 	}
 	
 	@Test(expected = ConnectException.class)
-	public void testRESTCallWithoutServer() throws Exception {
+	public void testRESTCallWithoutServer() throws Throwable {
 		server.stopServer();
-		HttpClient httpClient = HttpClient.newHttpClient();
-		HttpRequest sumRequest = HttpRequest.newBuilder().uri(new URI(TEST_URL)).GET().build();
-		httpClient.send(sumRequest, BodyHandlers.ofString());
+		Client client = ClientBuilder.newClient();
+		WebTarget testTarget = client.target(TEST_URL);
+		Invocation.Builder invocationBuilder = testTarget.request(MediaType.TEXT_PLAIN_TYPE);
+
+		try {
+			invocationBuilder.get();
+		} catch (ProcessingException e) {
+			throw e.getCause();
+		}
 		fail("Expected Connection Exception not thrown");
 	}
 
 	@Test
 	public void testRESTCall() throws Exception {
 		
-		HttpClient httpClient = HttpClient.newHttpClient();
-		HttpRequest sumRequest = HttpRequest.newBuilder().uri(new URI(TEST_URL)).GET().build();
-		HttpResponse<String> sumResponse = httpClient.send(sumRequest, BodyHandlers.ofString());
+		Client client = ClientBuilder.newClient();
+		WebTarget testTarget = client.target(TEST_URL);
+		Invocation.Builder invocationBuilder = testTarget.request(MediaType.TEXT_PLAIN_TYPE);
+
+
 		long result = 0L;
 		try {
-			System.out.println("Response: " + sumResponse.body());
-			result = Long.parseLong(sumResponse.body());
+			Response response = invocationBuilder.get();
+			String body = response.readEntity(String.class);
+			if (response.getStatus() != Status.OK.getStatusCode()) {
+				fail("http response was " + response.getStatus());
+			}
+			System.out.println("Response: " + body);
+			result = Long.parseLong(body);
 		} catch (NumberFormatException e) {
 			fail("Response was not a number");
 		}
